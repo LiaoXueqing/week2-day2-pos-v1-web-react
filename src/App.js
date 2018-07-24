@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+// import {} from 'bootstrap-react'
 import './App.css';
 
 class App extends Component {
@@ -44,6 +45,19 @@ class App extends Component {
       ]
     }
   }
+  // 从后台获取数据并重设state
+  // getItems=()=>{
+    // fetch
+    // this.setState
+  // }
+  paymentForMyCart=()=>{
+    let result=[];
+    this.state.myCart.map(item=>{
+      result.push(item.number===1?item.barcode:item.barcode+'-'+item.number);
+    });
+    console.log('payment for my cart',result);
+    //向后台发送数据
+  }
   showPage=()=>{
     this.setState({
       showItems:!this.state.showItems
@@ -55,17 +69,10 @@ class App extends Component {
     console.log(this.state.myCart);
 
   }
-  paymentForMyCart=()=>{
-    let result=[];
-    this.state.myCart.map(item=>{
-      result.push(item.number===1?item.barcode:item.barcode+'-'+item.number);
-    });
-    console.log('payment for my cart',result);
-  }
   render() {
     return (
       <div className="App text-center">
-        <button  style={{margin: '10px auto'}} onClick={this.showPage}>{this.state.showItems?'我的购物车':'返回商品列表'}</button>
+        <button  className='btn btn-primary' style={{margin: '10px auto'}} onClick={this.showPage}>{this.state.showItems?'我的购物车':'返回商品列表'}</button>
         {this.state.showItems?
         <ShowItems items={this.state.items} promotions={this.state.promotions} addItemToCart={this.addItemToCart}/>
         :
@@ -82,7 +89,7 @@ class MyCart extends Component{
   render(){
     return (
       <div className="text-center">
-        <table style={{margin: '10px auto'}} border="1"><tbody>
+        <table className='table table-bordered table-striped' style={{margin: '10px auto',width:'600px'}} border="1"><tbody>
         <tr>
           <td>barcode</td>
           <td>number</td>
@@ -98,7 +105,7 @@ class MyCart extends Component{
           })
         }
         </tbody></table>
-        <button onClick={this.props.paymentForMyCart}>确认购买</button>
+        <button className='btn btn-primary' onClick={this.props.paymentForMyCart}>确认购买</button>
       </div>
     );
   }
@@ -114,8 +121,8 @@ class ShowItems extends Component {
   }
   render(){
     return (
-      <div className="text-center">
-        <table style={{margin: '10px auto'}} border="1"><tbody>
+      <div className="text-center col-md">
+        <table className='table table-bordered table-striped' style={{margin: '10px auto',width:'800px'}} border="1"><tbody>
         <tr>
           <td>barcode</td>
           <td>name</td>
@@ -136,7 +143,7 @@ class ShowItems extends Component {
                   {this.props.promotions[0].barcodes.indexOf(item.barcode)!==-1?this.props.promotions[0].type:'NULL'}
                 </td>
                 <td>
-                  <input type="number" id={item.barcode} min='1'/>
+                  <input type="number" id={item.barcode} min='1' style={{width:'48px'}}/>
                   <button onClick={this.addItemToCart.bind(this,item)}>+</button>
                 </td>
               </tr>
