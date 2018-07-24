@@ -67,7 +67,7 @@ class App extends Component {
       <div className="App text-center">
         <button  style={{margin: '10px auto'}} onClick={this.showPage}>{this.state.showItems?'我的购物车':'返回商品列表'}</button>
         {this.state.showItems?
-        <ShowItems items={this.state.items} addItemToCart={this.addItemToCart}/>
+        <ShowItems items={this.state.items} promotions={this.state.promotions} addItemToCart={this.addItemToCart}/>
         :
         <MyCart myCart={this.state.myCart} paymentForMyCart={this.paymentForMyCart}/>
         }
@@ -107,6 +107,11 @@ class ShowItems extends Component {
   constructor(props){
     super(props);
   }
+  addItemToCart=(item)=>{
+    let number = document.getElementById(item.barcode).value;
+    document.getElementById(item.barcode).value = 0;
+    this.props.addItemToCart(item,parseInt(number))
+  }
   render(){
     return (
       <div className="text-center">
@@ -116,6 +121,8 @@ class ShowItems extends Component {
           <td>name</td>
           <td>unit</td>
           <td>price</td>
+          <td>promotions</td>
+          <td>action</td>
         </tr>
         {
           this.props.items.map(item=>{
@@ -125,7 +132,13 @@ class ShowItems extends Component {
                 <td>{item.name}</td>
                 <td>{item.unit}</td>
                 <td>{item.price}</td>
-                <td><button onClick={()=>this.props.addItemToCart(item,1)}>+</button></td>
+                <td>
+                  {this.props.promotions[0].barcodes.indexOf(item.barcode)!==-1?this.props.promotions[0].type:'NULL'}
+                </td>
+                <td>
+                  <input type="number" id={item.barcode} min='1'/>
+                  <button onClick={this.addItemToCart.bind(this,item)}>+</button>
+                </td>
               </tr>
             )
           })
